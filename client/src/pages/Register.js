@@ -1,3 +1,5 @@
+// Component of a UI for registering as a user in the database
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";

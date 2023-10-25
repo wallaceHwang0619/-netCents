@@ -1,3 +1,5 @@
+// Component of a UI for authenticating a user to then allow access to information from the database
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";

@@ -1,3 +1,5 @@
+// Component which creates a visualized table of the largest unconfirmed transactions currently in the database
+
 import { useEffect, useState } from "react";
 import "./Data.css";
 
