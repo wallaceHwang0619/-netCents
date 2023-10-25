@@ -155,7 +155,7 @@ function isAuthenticated(req, res, next) {
   }
 }
 
-// Permits GET requests from database to obtain the list of largest unconfirmed transactions
+// Permits GET requests from database to obtain the list of largest unconfirmed transactions in JSON format
 app.get("/api/largest-transaction", isAuthenticated, (req, res) => {
   db.query("SELECT * FROM largest_unconfirmed_transactions", (err, result) => {
     if (err) {
