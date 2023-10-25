@@ -40,6 +40,6 @@ button:hover {
   text-decoration: underline;
 }
 
-p {
+.error {
   color: red;
 }

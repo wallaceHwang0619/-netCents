@@ -74,7 +74,7 @@ const Login = () => {
         <button type="submit">Login</button>
       </form>
       <button onClick={handleRegister}>Register</button>
-      {isError && <p>Error: {errorMessage}</p>}
+      {isError && <p className="error">Error: {errorMessage}</p>}
     </div>
   );
 };

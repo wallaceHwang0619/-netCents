@@ -73,7 +73,7 @@ const Register = () => {
         <button type="submit">Register</button>
       </form>
       <button onClick={handleReturn}>Return to Login</button>
-      {isError && <p>Error: {errorMessage}</p>}
+      {isError && <p className="error">Error: {errorMessage}</p>}
     </div>
   );
 };
