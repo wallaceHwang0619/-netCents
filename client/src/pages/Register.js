@@ -1,10 +1,17 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 const Register = () => {
+  const navigate = useNavigate();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isError, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(username, password);
 
     fetch("http://localhost:3001/api/register", {
       method: "post",
@@ -16,9 +23,22 @@ const Register = () => {
         password: password,
       }),
     })
-      .then((response) => response.text())
-      .then((result) => console.log(result))
+      .then((res) => res.json())
+      .then((json) => {
+        if ("message" in json) {
+          navigate("/data");
+        } else {
+          setError(true);
+          setErrorMessage(json.error);
+          setUsername("");
+          setPassword("");
+        }
+      })
       .catch((error) => console.log("error", error));
+  };
+
+  const handleReturn = (e) => {
+    navigate("/");
   };
 
   const handleUsernameChange = (e) => {
@@ -28,40 +48,30 @@ const Register = () => {
     setPassword(e.target.value);
   };
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
   return (
-    <div>
-      <h1>Register</h1>
+    <div className="user-container">
+      <h1>User Registration</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            value={username}
-            onChange={handleUsernameChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-        </div>
-        <div>
-          <button type="submit">Register</button>
-        </div>
+        <input
+          type="text"
+          name="username"
+          id="username"
+          value={username}
+          placeholder="Username"
+          onChange={handleUsernameChange}
+        />
+        <input
+          type="password"
+          name="password"
+          id="password"
+          value={password}
+          placeholder="Password"
+          onChange={handlePasswordChange}
+        />
+        <button type="submit">Register</button>
       </form>
-      <button>
-        <Link to="/">Return to Login</Link>
-      </button>
+      <button onClick={handleReturn}>Return to Login</button>
+      {isError && <p>Error: {errorMessage}</p>}
     </div>
   );
 };

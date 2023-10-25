@@ -1,0 +1,43 @@
+.user-container {
+  max-width: 300px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 5px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 24px;
+  color: #333;
+  margin: 20px;
+}
+
+input {
+  width: 228px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+button {
+  width: 250px;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  text-decoration: underline;
+}
+
+p {
+  color: red;
+}
