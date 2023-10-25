@@ -1,16 +1,27 @@
-table {
-  table-layout: fixed;
-  border-collapse: collapse;
+.data-container {
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 table {
+  table-layout: fixed;
+  border-collapse: collapse;
   overflow-x: auto;
 }
 
 th {
+  border: 1px solid #dddddd;
   background-color: #f2f2f2;
   text-align: left;
   padding: 8px;
+  text-align: center;
+}
+
+.hoverable:hover {
+  cursor: pointer;
 }
 
 td {
@@ -20,8 +31,5 @@ td {
   white-space: nowrap;
   overflow-x: scroll;
   max-width: 200px;
-}
-
-tr:hover {
-  background-color: #f5f5f5;
+  text-align: center;
 }
