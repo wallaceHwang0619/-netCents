@@ -28,7 +28,7 @@ const Register = () => {
       .then((res) => res.json())
       .then((json) => {
         if ("message" in json) {
-          navigate("/data");
+          navigate("/");
         } else {
           setError(true);
           setErrorMessage(json.error);

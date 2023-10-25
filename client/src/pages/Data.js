@@ -8,8 +8,6 @@ const Data = () => {
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState({});
 
-  const types = ["transactionID, hash, total, fees, inputs, outputs"];
-
   useEffect(() => {
     const fetchData = async () => {
       fetch("http://localhost:3001/api/largest-transaction", {
