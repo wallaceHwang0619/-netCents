@@ -1,3 +1,5 @@
+// This code is meant to store the largest unconfirmed transactions received from the 'BlockCypher' API, handle user authentication, as well as create an API endpoint to see the data.
+
 const express = require("express");
 const fetch = require("node-fetch");
 const bodyParser = require("body-parser");
@@ -7,6 +9,7 @@ const cors = require("cors");
 
 const app = express();
 
+// Store information of current session for user authentication (Line 13 - 28)
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -24,18 +27,13 @@ app.use(
   })
 );
 
+// Keep track of largest transaction every time the script is re-run
 let largestTransaction = null;
 
+// BlockCypher API
 const blockcypherAPI = "https://api.blockcypher.com/v1/btc/main/txs";
 
-db.query("SHOW TABLES", (err, results) => {
-  if (err) {
-    console.error("Error with SQL query", err);
-  } else {
-    console.log(results);
-  }
-});
-
+// Function for finding the largest transaction by 'Total' in a list of unconfirmed transactions.
 function findLargestTransaction(transactions) {
   let largest = null;
   transactions.forEach((transaction) => {
@@ -46,6 +44,7 @@ function findLargestTransaction(transactions) {
   return largest;
 }
 
+// Function for storing the largest found transaction into the MySQL datbase (Specifically, 'largest_unconfirmed_transactions' table)
 function storeLargestTransaction(transaction) {
   const sql =
     "INSERT INTO largest_unconfirmed_transactions (hash, total, fees, inputs, outputs) VALUES (?, ?, ?, ?, ?)";
@@ -66,6 +65,7 @@ function storeLargestTransaction(transaction) {
   });
 }
 
+// Function that creates a GET request from the BlockCypher API, which then executes code to find largest unconfirmed transaction.
 function monitorTransactions() {
   fetch(blockcypherAPI)
     .then((response) => response.json())
@@ -83,8 +83,10 @@ function monitorTransactions() {
     });
 }
 
+// Executes 'monitorTransactions' function every 5 minutes
 setInterval(monitorTransactions, 300000);
 
+// Permits POST requests for registering as a user in the database
 app.post("/api/register", (req, res) => {
   const { username, password } = req.body;
 
@@ -123,6 +125,7 @@ app.post("/api/register", (req, res) => {
   });
 });
 
+// Permits POST requests for logging into the database
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
 
@@ -134,7 +137,7 @@ app.post("/api/login", (req, res) => {
 
     const userAuth = result;
     if (userAuth.length) {
-      req.session.user = username;
+      req.session.user = username; // Saves username from current session to authenticate user
       req.session.save();
       return res.json({ message: "Login Successful" });
     } else {
@@ -143,6 +146,7 @@ app.post("/api/login", (req, res) => {
   });
 });
 
+// Authenticates a user based on success of their login
 function isAuthenticated(req, res, next) {
   if (req.session.user) {
     next();
@@ -151,6 +155,7 @@ function isAuthenticated(req, res, next) {
   }
 }
 
+// Permits GET requests from database to obtain the list of largest unconfirmed transactions
 app.get("/api/largest-transaction", isAuthenticated, (req, res) => {
   db.query("SELECT * FROM largest_unconfirmed_transactions", (err, result) => {
     if (err) {
@@ -165,6 +170,7 @@ app.get("/api/largest-transaction", isAuthenticated, (req, res) => {
   });
 });
 
+// Establishes API server
 const PORT = 3001;
 
 app.listen(PORT, () => {
