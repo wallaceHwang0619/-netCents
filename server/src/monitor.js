@@ -88,17 +88,23 @@ setInterval(monitorTransactions, 300000);
 app.post("/api/register", (req, res) => {
   const { username, password } = req.body;
 
+  if (username.length === 0 || password.length === 0) {
+    return res.json({
+      error: "Username or password field must contain values.",
+    });
+  }
+
   const userQuery = `SELECT * FROM Users WHERE username = "${username}"`;
 
   db.query(userQuery, (err, result) => {
     if (err) {
-      return res.json({ message: `Database error: ${err}` });
+      return res.json({ error: `Database error: ${err}` });
     }
 
     const existingUserResults = result;
     if (existingUserResults.length) {
       return res.json({
-        message: "Username already exists. Please try another username.",
+        error: "Username already exists. Please try another username.",
       });
     } else {
       const createUser = `INSERT INTO Users (username, password) Values ("${username}", "${password}")`;
@@ -106,7 +112,7 @@ app.post("/api/register", (req, res) => {
       db.query(createUser, (err, result) => {
         if (err) {
           return res.json({
-            message: `Database error, cannot store user: ${err}`,
+            error: `Database error, cannot store user: ${err}`,
           });
         }
         return res.json({
@@ -123,7 +129,7 @@ app.post("/api/login", (req, res) => {
   const userAuthQuery = `SELECT * FROM users WHERE username = "${username}" AND password = "${password}"`;
   db.query(userAuthQuery, (err, result) => {
     if (err) {
-      return res.json({ message: `Database error: ${err}` });
+      return res.json({ error: `Database error: ${err}` });
     }
 
     const userAuth = result;
@@ -141,7 +147,6 @@ function isAuthenticated(req, res, next) {
   if (req.session.user) {
     next();
   } else {
-    console.log("User is not authenticated");
     return res.json({ error: "Unauthorized user" });
   }
 }
@@ -155,7 +160,7 @@ app.get("/api/largest-transaction", isAuthenticated, (req, res) => {
     if (result.length) {
       return res.json(result);
     } else {
-      return res.json({ message: "No transactions in table." });
+      return res.json({ error: "No transactions in table." });
     }
   });
 });
